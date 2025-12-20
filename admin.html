@@ -77,32 +77,56 @@ function login(){
 }
 
 function approve(i){
-  records[i].approved = true;
+  const record = records[i];
 
-  const level = levels.find(l => l.id === records[i].levelId);
+  // Level bul
+  const level = levels.find(l => l.id.toString() === record.levelId.toString());
   if(!level) return alert("Level not found");
 
+  // Leaderboard oku
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 
-  let player = leaderboard.find(p => p.nick === records[i].nick);
+  // Oyuncu var mı?
+  let player = leaderboard.find(p => p.nick === record.nick);
   if(!player){
-    player = { nick: records[i].nick, points: 0 };
+    player = {
+      nick: record.nick,
+      points: 0,
+      completed: [],       // burası boşsa problem olabilir
+      firstVictories: []
+    };
     leaderboard.push(player);
   }
 
-  player.points += level.points;
+  // Puan ekle
+  player.points += level.points || 0;
 
+  // Completed ekle
+  if(!player.completed.includes(level.name)){
+    player.completed.push(level.name);  // level adı ekleniyor
+  }
+
+  // First Victor kontrol
+  const approvedRecords = records.filter(r =>
+    r.levelId.toString() === level.id.toString() && r.approved
+  );
+
+  if(approvedRecords.length === 0){
+    player.firstVictories.push(level.name);
+    record.isFirst = true;
+  }
+
+  // Recordu onayla
+  record.approved = true;
+
+  // Kaydet
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   localStorage.setItem("records", JSON.stringify(records));
 
-  alert("Approved + points added");
+  alert("Record approved + points added");
   location.reload();
 }
 
-function reject(i){
-  records.splice(i,1);
-  localStorage.setItem("records", JSON.stringify(records));
-  location.reload();
 }
 
 function addLevel(){
