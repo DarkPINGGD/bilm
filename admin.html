@@ -2,53 +2,22 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel & Demon List</title>
+<title>Admin Panel</title>
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background:#e6f2ff;
-  margin:0;
-  padding:0;
-}
-
-/* Menü */
-.menu-container {
-  position: fixed; top: 10px; right: 20px; display:flex; flex-direction:column; gap:6px; z-index:100;
-}
-.menu {
-  display:flex; gap:16px; align-items:center;
-}
-.menu a {
-  position: relative; padding: 0 10px; text-decoration: none; font-weight: bold; color: #1e90ff;
-}
-.menu a:not(:last-child)::after {
-  content:""; position:absolute; right:0; top:0; height:100%; width:1px; background: rgba(0,0,0,0.2);
-}
-.menu a:hover {
-  color:#005eff; text-shadow:0 0 8px rgba(0,123,255,0.7);
-}
-/* Menü alt çizgi */
-.menu-container > .menu-line {
-  height:2px; background: rgba(0,0,0,0.2); margin-top:6px;
-}
-
-/* Başlık */
-h1 {
-  text-align:center; font-size:36px; margin-top:70px; color:#0077ff; font-weight:800;
-}
-
-/* Kartlar */
-.card {
-  background:#cce6ff; padding:10px; margin:10px auto; border-radius:8px; max-width:600px;
-}
-
-/* Butonlar */
-button {
-  padding:6px 12px; margin:2px; font-size:16px; border:none; border-radius:4px; cursor:pointer;
-}
-.approve {background:#22c55e; color:white;}
-.reject {background:#ef4444; color:white;}
-.add {background:#2563eb; color:white;}
+body{font-family:Arial;background:#e6f2ff;margin:0;padding:0;}
+.menu-container{position:fixed;top:10px;right:20px;display:flex;flex-direction:column;gap:6px;z-index:100;}
+.menu{display:flex;gap:16px;align-items:center;}
+.menu a{position:relative;padding:0 10px;text-decoration:none;font-weight:bold;color:#1e90ff;}
+.menu a:not(:last-child)::after{content:"";position:absolute;right:0;top:0;height:100%;width:1px;background:rgba(0,0,0,0.2);}
+.menu a:hover{color:#005eff;text-shadow:0 0 8px rgba(0,123,255,0.7);}
+.menu-container>.menu-line{height:2px;background: rgba(0,0,0,0.2);margin-top:6px;}
+h1{text-align:center;font-size:36px;margin-top:70px;color:#0077ff;font-weight:800;}
+.card{background:#cce6ff;padding:10px;margin:10px auto;border-radius:8px;max-width:600px;}
+button{padding:6px 12px;margin:2px;font-size:16px;border:none;border-radius:4px;cursor:pointer;}
+.approve{background:#22c55e;color:white;}
+.reject{background:#ef4444;color:white;}
+.add{background:#2563eb;color:white;}
+input{padding:6px;margin:2px;width:95%;font-size:16px;}
 </style>
 </head>
 <body>
@@ -73,122 +42,75 @@ button {
 <div id="panel"></div>
 
 <script>
-// Şifre
-const PASSWORD = "1234";
-
-// Verileri yükle
+const PASSWORD="1234";
 let records = JSON.parse(localStorage.getItem("records")) || [];
-let levels  = JSON.parse(localStorage.getItem("levels")) || [];
+let levels = JSON.parse(localStorage.getItem("levels")) || [];
+let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 
-// Login buton
 document.getElementById("loginBtn").addEventListener("click", login);
 
 function login(){
   const passValue = document.getElementById("pass").value;
   const panel = document.getElementById("panel");
+  if(passValue!==PASSWORD){ alert("Wrong password"); return; }
 
-  if(passValue !== PASSWORD){
-    alert("Wrong password");
-    return;
-  }
-
-  let html = "<h2>Pending Records</h2>";
-  if(records.length === 0){
-    html += "<p>No records yet.</p>";
-  } else {
+  let html="<h2>Pending Records</h2>";
+  if(records.length===0){ html+="<p>No records yet.</p>"; }
+  else{
     records.forEach((r,i)=>{
-      html += `
-      <div class="card">
+      html+=`<div class="card">
         <b>${r.nick}</b> — ${r.levelId} (${r.progress}%)
-        <br>
-        <a href="${r.yt}" target="_blank">YouTube</a> |
-        <a href="${r.raw}" target="_blank">Raw</a>
-        <br>
-        ${r.approved ? "APPROVED" : `
-          <button class="approve" onclick="approve(${i})">Approve</button>
-          <button class="reject" onclick="reject(${i})">Reject</button>
-        `}
+        <br><a href="${r.yt}" target="_blank">YouTube</a> | <a href="${r.raw}" target="_blank">Raw</a>
+        <br>${r.approved?"APPROVED":`<button class="approve" onclick="approve(${i})">Approve</button><button class="reject" onclick="reject(${i})">Reject</button>`}
       </div>`;
     });
   }
 
-  // Add Level
-  html += `
-  <hr>
-  <h2>Add Level</h2>
-  <input id="levelRank" placeholder="Rank (example: 23)"><br>
-  <input id="levelId" placeholder="Level ID"><br>
-  <input id="levelName" placeholder="Level Name"><br>
-  <input id="levelCreator" placeholder="Creator"><br>
-  <input id="levelPoints" placeholder="Points for completing"><br>
-  <button class="add" onclick="addLevel()">Add Level</button>
-  <div id="levelList"></div>
+  html+=`<hr><h2>Add Level</h2>
+    <input id="levelRank" placeholder="Rank (example: 23)"><br>
+    <input id="levelId" placeholder="Level ID"><br>
+    <input id="levelName" placeholder="Level Name"><br>
+    <input id="levelCreator" placeholder="Creator"><br>
+    <input id="levelPoints" placeholder="Points for completing"><br>
+    <button class="add" onclick="addLevel()">Add Level</button>
+    <div id="levelList"></div>
   `;
-
-  panel.innerHTML = html;
+  panel.innerHTML=html;
   renderLevels();
 }
 
-// Approve / Reject
 function approve(i){
-  const record = records[i];
-  const level = levels.find(l => l.id.toString() === record.levelId.toString());
+  const record=records[i];
+  const level=levels.find(l=>l.id.toString()===record.levelId.toString());
   if(!level) return alert("Level not found");
 
-  // Leaderboard
-  let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-  let player = leaderboard.find(p => p.nick === record.nick);
-  if(!player){
-    player = {nick:record.nick, points:0, completed:[], firstVictories:[]};
-    leaderboard.push(player);
-  }
+  let player=leaderboard.find(p=>p.nick===record.nick);
+  if(!player){ player={nick:record.nick,points:0,completed:[],firstVictories:[]}; leaderboard.push(player); }
 
-  // Puan
-  player.points += Number(level.points) || 0;
-
-  // Completed
+  player.points+=Number(level.points)||0;
   if(!player.completed.includes(level.name)) player.completed.push(level.name);
 
-  // First Victor
-  const approvedRecords = records.filter(r => r.levelId.toString()===level.id.toString() && r.approved);
-  if(approvedRecords.length===0){
-    player.firstVictories.push(level.name);
-    record.isFirst = true;
-  }
+  const approvedRecords = records.filter(r=>r.levelId.toString()===level.id.toString() && r.approved);
+  if(approvedRecords.length===0){ player.firstVictories.push(level.name); record.isFirst=true; }
 
-  record.approved = true;
+  record.approved=true;
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   localStorage.setItem("records", JSON.stringify(records));
-
   alert("Record approved + points added");
   location.reload();
 }
 
-function reject(i){
-  records.splice(i,1);
-  localStorage.setItem("records", JSON.stringify(records));
-  alert("Record rejected");
-  location.reload();
-}
+function reject(i){ records.splice(i,1); localStorage.setItem("records",JSON.stringify(records)); alert("Record rejected"); location.reload(); }
 
-// Level ekleme
 function addLevel(){
-  const rank = document.getElementById("levelRank").value;
-  const id = document.getElementById("levelId").value;
-  const name = document.getElementById("levelName").value;
-  const creator = document.getElementById("levelCreator").value;
-  const points = document.getElementById("levelPoints").value;
-
+  const rank=document.getElementById("levelRank").value;
+  const id=document.getElementById("levelId").value;
+  const name=document.getElementById("levelName").value;
+  const creator=document.getElementById("levelCreator").value;
+  const points=document.getElementById("levelPoints").value;
   if(!rank||!id||!name||!creator||!points){ alert("All fields required"); return; }
 
-  levels.push({
-    rank: Number(rank),
-    id: id.toString(),
-    name: name,
-    creator: creator,
-    points: Number(points)
-  });
-
+  levels.push({rank:Number(rank),id:id.toString(),name:name,creator:creator,points:Number(points)});
   levels.sort((a,b)=>a.rank-b.rank);
   localStorage.setItem("levels", JSON.stringify(levels));
   alert("LEVEL ADDED SUCCESSFULLY");
@@ -198,30 +120,23 @@ function addLevel(){
   document.getElementById("levelName").value="";
   document.getElementById("levelCreator").value="";
   document.getElementById("levelPoints").value="";
-
   renderLevels();
 }
 
-// Level listeleme ve silme
 function renderLevels(){
-  const listDiv = document.getElementById("levelList");
-  if(!listDiv) return;
-
-  listDiv.innerHTML = "";
+  const listDiv=document.getElementById("levelList"); if(!listDiv) return;
+  listDiv.innerHTML="";
   levels.forEach((l,i)=>{
-    listDiv.innerHTML += `
-      <div class="card">
-        <b>#${l.rank}</b> ${l.name} — ${l.creator} | Points: ${l.points}
-        <button onclick="deleteLevel(${i})">Delete</button>
-      </div>`;
+    listDiv.innerHTML+=`<div class="card">
+      <b>#${l.rank}</b> ${l.name} — ${l.creator} | Points: ${l.points}
+      <button onclick="deleteLevel(${i})">Delete</button>
+    </div>`;
   });
 }
 
 function deleteLevel(i){
   if(!confirm("Delete this level?")) return;
   const removed = levels.splice(i,1)[0];
-
-  // Recordları sil
   records = records.filter(r=>r.levelId.toString()!==removed.id.toString());
   localStorage.setItem("levels", JSON.stringify(levels));
   localStorage.setItem("records", JSON.stringify(records));
