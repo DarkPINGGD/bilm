@@ -27,10 +27,6 @@ document.getElementById("loginBtn").addEventListener("click", login);
 function login(){
   const passValue = document.getElementById("pass").value;
   const panel = document.getElementById("panel");
-  <h2>Existing Levels</h2>
-<div id="levelList"></div>
-  renderLevels();
-
 
   if(passValue !== PASSWORD){
     alert("Wrong password");
@@ -63,136 +59,104 @@ function login(){
     <hr>
     <h2>Add Level</h2>
 
-    <input id="levelRank" placeholder="Rank (example: 23)"><br>
+    <input id="levelRank" placeholder="Rank"><br>
     <input id="levelId" placeholder="Level ID"><br>
     <input id="levelName" placeholder="Level Name"><br>
-    <input id="levelCreator" placeholder="Creator"><br><br>
-    <input id="levelPoints" placeholder="Points (example: 350)">
+    <input id="levelCreator" placeholder="Creator"><br>
+    <input id="levelPoints" placeholder="Points"><br><br>
+
     <button onclick="addLevel()">Add Level</button>
+
+    <hr>
+    <h2>Existing Levels</h2>
+    <div id="levelList"></div>
   `;
 
   panel.innerHTML = html;
+  renderLevels();
 }
 
 function approve(i){
   records[i].approved = true;
 
-  // Level bul
   const level = levels.find(l => l.id === records[i].levelId);
   if(!level) return alert("Level not found");
 
-  // Leaderboard oku
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 
-  // Oyuncu var mı?
   let player = leaderboard.find(p => p.nick === records[i].nick);
-
   if(!player){
-    player = {
-      nick: records[i].nick,
-      points: 0,
-      completed: [],
-      firstVictories: []
-    };
+    player = { nick: records[i].nick, points: 0 };
     leaderboard.push(player);
   }
 
-  // Puan ekle
   player.points += level.points;
-
-  // Completed ekle
-  player.completed.push(level.name);
-
-  // First Victor kontrol
-  const approvedRecords = records.filter(r =>
-    r.levelId === level.id && r.approved
-  );
-
-  if(approvedRecords.length === 1){
-    player.firstVictories.push(level.name);
-    records[i].isFirst = true;
-  }
 
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   localStorage.setItem("records", JSON.stringify(records));
 
-  alert("Record approved + points added");
+  alert("Approved + points added");
   location.reload();
-}
-
 }
 
 function reject(i){
   records.splice(i,1);
   localStorage.setItem("records", JSON.stringify(records));
-  alert("Record rejected");
   location.reload();
 }
 
 function addLevel(){
-  const rank = document.getElementById("levelRank").value;
-  const id = document.getElementById("levelId").value;
-  const name = document.getElementById("levelName").value;
-  const creator = document.getElementById("levelCreator").value;
-  const points = document.getElementById("levelPoints").value;
+  const rank = levelRank.value;
+  const id = levelId.value;
+  const name = levelName.value;
+  const creator = levelCreator.value;
+  const points = levelPoints.value;
 
-
-
-  if(!rank || !id || !name || !creator){
+  if(!rank || !id || !name || !creator || !points){
     alert("All fields required");
     return;
   }
 
   levels.push({
-    rank: Number(rank),
+    rank:Number(rank),
     id,
     name,
     creator,
-    points: Number(points)
+    points:Number(points)
   });
 
   levels.sort((a,b)=>a.rank-b.rank);
   localStorage.setItem("levels", JSON.stringify(levels));
 
-  alert("LEVEL ADDED SUCCESSFULLY");
-  function renderLevels(){
+  alert("Level added");
+  renderLevels();
+}
+
+function renderLevels(){
   const listDiv = document.getElementById("levelList");
   if(!listDiv) return;
 
-  let levels = JSON.parse(localStorage.getItem("levels")) || [];
   listDiv.innerHTML = "";
 
-  if(levels.length === 0){
-    listDiv.innerHTML = "<p>No levels.</p>";
-    return;
-  }
+  levels.forEach((l,i)=>{
+    listDiv.innerHTML += `
+      <div>
+        <b>#${l.rank}</b> ${l.name}
+        <button onclick="deleteLevel(${i})">Delete</button>
+      </div>
+    `;
+  });
+}
 
-  levels
-    .sort((a,b)=>a.rank-b.rank)
-    .forEach((l,i)=>{
-      listDiv.innerHTML += `
-        <div style="margin:6px 0">
-          <b>#${l.rank}</b> ${l.name}
-          <button style="margin-left:10px" onclick="deleteLevel(${i})">
-            Delete
-          </button>
-        </div>
-      `;
-    });
-    function deleteLevel(index){
-  if(!confirm("Delete this level?")) return;
+function deleteLevel(i){
+  if(!confirm("Delete level?")) return;
 
-  let levels = JSON.parse(localStorage.getItem("levels")) || [];
-  const removed = levels.splice(index,1)[0];
-
+  const removed = levels.splice(i,1)[0];
   localStorage.setItem("levels", JSON.stringify(levels));
 
-  // Bu levelin recordlarını da sil
-  let records = JSON.parse(localStorage.getItem("records")) || [];
   records = records.filter(r => r.levelId !== removed.id);
   localStorage.setItem("records", JSON.stringify(records));
 
-  alert("Level deleted");
   location.reload();
 }
 </script>
