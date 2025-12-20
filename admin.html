@@ -63,6 +63,7 @@ function login(){
     <input id="levelId" placeholder="Level ID"><br>
     <input id="levelName" placeholder="Level Name"><br>
     <input id="levelCreator" placeholder="Creator"><br><br>
+    <input id="levelPoints" placeholder="Points (example: 350)">
     <button onclick="addLevel()">Add Level</button>
   `;
 
@@ -88,6 +89,7 @@ function addLevel(){
   const id = document.getElementById("levelId").value;
   const name = document.getElementById("levelName").value;
   const creator = document.getElementById("levelCreator").value;
+
 
   if(!rank || !id || !name || !creator){
     alert("All fields required");
