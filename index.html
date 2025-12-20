@@ -40,8 +40,8 @@ a{text-decoration:none}
   </h1>
 </div>
 
-<!-- Menü sağ üstte, tüm sayfalarda sabit -->
-<div class="menu" style="position:fixed; top:10px; right:20px;">
+<!-- Menü sağ üstte -->
+<div class="menu" style="position:fixed; top:10px; right:20px; display:flex; align-items:center; gap:16px;">
   <a href="index.html">Demon List</a>
   <a href="leaderboard.html">Leaderboard</a>
   <a href="submit.html">Submit</a>
@@ -49,17 +49,32 @@ a{text-decoration:none}
   <a href="https://discord.gg/XXXX" target="_blank">Discord</a>
 </div>
 
-<!-- Başlık ile içerik arasında şeffaf çizgi -->
-<div style="width:80%; margin:20px auto; border-bottom:2px solid rgba(0,0,0,0.2);"></div>
+<!-- Menü altı çizgi -->
+<div style="position:fixed; top:50px; right:20px; width:auto; height:2px; background:rgba(0,0,0,0.2);"></div>
 
-<!-- Sayfa içeriği -->
-<div id="content">
-  <!-- Buraya sayfaya özel içerik gelecek (demon list, leaderboard vs.) -->
-</div>
-
-
-
-
+<!-- Menü linkleri arasında yan çizgi -->
+<style>
+.menu a {
+  position: relative;
+  padding: 0 10px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #1e90ff;
+}
+.menu a:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background: rgba(0,0,0,0.2);
+}
+.menu a:hover {
+  color: #005eff;
+  text-shadow: 0 0 8px rgba(0,123,255,0.7);
+}
+</style>
 
 <h1>Demon List</h1>
 
