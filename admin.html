@@ -194,10 +194,15 @@ function deleteLevel(i) {
 
 function approve(i) {
   const record = records[i];
+  
+  // Level'ı ID ile bul
   const level = levels.find(l => l.id.toString() === record.levelId.toString());
   if(!level) return alert("Level not found");
 
-  // Leaderboard
+  // Eğer level.name undefined ise uyarı ver
+  if(!level.name) return alert("Level name not found for this ID");
+
+  // Player'ı bul veya oluştur
   let player = leaderboard.find(p => p.nick === record.nick);
   if(!player) {
     player = { nick: record.nick, points: 0, completed: [], firstVictories: [] };
@@ -207,7 +212,7 @@ function approve(i) {
   // Puan ekle
   player.points += Number(level.points) || 0;
 
-  // COMPLETED kısmına ekle
+  // Completed kısmına ekle (tekrar eklenmesin diye kontrol)
   if(!player.completed.includes(level.name)) {
     player.completed.push(level.name);
   }
@@ -222,7 +227,7 @@ function approve(i) {
   // Record'u onayla
   record.approved = true;
 
-  // localStorage güncelle
+  // LocalStorage güncelle
   localStorage.setItem("records", JSON.stringify(records));
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 
