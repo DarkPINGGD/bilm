@@ -3,50 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <title>Demon List</title>
-<style>
-body{background:#e6f2ff;font-family:Arial}
-.card{background:#cce6ff;padding:10px;margin:10px;border-radius:6px}
-.menu{position:fixed;top:10px;right:10px}
-.menu a{margin-left:10px;color:#0077ff;font-weight:bold}
-a{text-decoration:none}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <div class="menu">
-<a href="index.html">Demon List</a>
-<a href="leaderboard.html">Leaderboard</a>
-<a href="submit.html">Submit</a>
-<a href="admin.html">Admin</a>
-<a href="https://discord.gg/XXXX" target="_blank">Discord</a>
+  <a href="index.html">Demon List</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="submit.html">Submit</a>
+  <a href="admin.html">Admin</a>
+  <a href="https://discord.gg/XXXX" target="_blank">Discord</a>
 </div>
+<div class="divider"></div>
 
-<h1>Demon List</h1>
+<div class="container" id="list"></div>
 
-<div id="list"></div>
+<script type="module">
+import {getLevels,saveLevels} from "./js/data.js";
 
-<script>
-let levels = JSON.parse(localStorage.getItem("levels")) || [
- {id:1,name:"Bloodbath"},
- {id:2,name:"Sonic Wave"}
-];
-
-localStorage.setItem("levels",JSON.stringify(levels));
+let levels=getLevels();
+saveLevels(levels);
 
 document.getElementById("list").innerHTML =
-levels.map((l,i)=>`
-  <div class="card">
-    <a href="level.html" onclick="select(${l.id})">
-      #${i+1} ${l.name}
-    </a>
-  </div>
+levels.map(l=>`
+<div class="card">
+<a class="level-name" href="level.html" onclick="localStorage.setItem('level',${l.id})">
+#${l.rank} ${l.name}
+</a>
+</div>
 `).join("");
-
-function select(id){
-  localStorage.setItem("selectedLevel",id);
-}
 </script>
 
 </body>
 </html>
-
