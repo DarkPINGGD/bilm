@@ -197,16 +197,32 @@ function approve(i) {
   const level = levels.find(l => l.id.toString() === record.levelId.toString());
   if(!level) return alert("Level not found");
 
+  // Leaderboard
   let player = leaderboard.find(p => p.nick === record.nick);
-  if(!player) { player = {nick:record.nick, points:0, completed:[], firstVictories:[]}; leaderboard.push(player); }
+  if(!player) {
+    player = { nick: record.nick, points: 0, completed: [], firstVictories: [] };
+    leaderboard.push(player);
+  }
 
-  player.points += Number(level.points)||0;
-  if(!player.completed.includes(level.name)) player.completed.push(level.name);
+  // Puan ekle
+  player.points += Number(level.points) || 0;
 
+  // COMPLETED kısmına ekle
+  if(!player.completed.includes(level.name)) {
+    player.completed.push(level.name);
+  }
+
+  // First Victor kontrolü
   const approvedRecordsForLevel = records.filter(r => r.levelId.toString() === level.id.toString() && r.approved);
-  if(approvedRecordsForLevel.length === 0){ player.firstVictories.push(level.name); record.isFirst=true; }
+  if(approvedRecordsForLevel.length === 0) {
+    player.firstVictories.push(level.name);
+    record.isFirst = true;
+  }
 
+  // Record'u onayla
   record.approved = true;
+
+  // localStorage güncelle
   localStorage.setItem("records", JSON.stringify(records));
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 
