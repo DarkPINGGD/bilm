@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Leaderboard</title>
+<style>
+body{background:#e6f2ff;font-family:Arial}
+.card{background:#cce6ff;margin:8px;padding:8px}
+</style>
+</head>
+<body>
+
+<h1>Player Leaderboard</h1>
+<a href="index.html">← Back</a>
+
+<div id="lb"></div>
+
+<script>
+let records = JSON.parse(localStorage.getItem("records")) || [];
+let approved = records.filter(r=>r.approved);
+
+let scores = {};
+approved.forEach(r=>{
+  scores[r.nick]=(scores[r.nick]||0)+1;
+});
+
+document.getElementById("lb").innerHTML =
+Object.keys(scores).map(p=>
+  `<div class="card">${p} - ${scores[p]} record</div>`
+).join("");
+</script>
+
+</body>
+</html>
