@@ -1,48 +1,53 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Level</title>
 <style>
-body{background:#0b0f1a;color:white;font-family:Arial}
-.card{background:#11162a;padding:12px;margin:10px;border-radius:6px}
-button{background:#2563eb;color:white;border:0;padding:6px}
+body{background:#e6f2ff;font-family:Arial}
+.card{background:#cce6ff;padding:10px;margin:10px;border-radius:6px}
+.menu{position:fixed;top:10px;right:10px}
+.menu a{margin-left:10px;color:#0077ff;font-weight:bold}
 </style>
 </head>
 <body>
 
-<a href="index.html">← Back</a>
-<div id="content"></div>
-
-<div class="card">
-<h3>Submit Record</h3>
-<input id="player" placeholder="Player">
-<input id="progress" type="number" placeholder="Progress %">
-<button onclick="submit()">Send</button>
+<div class="menu">
+<a href="index.html">Demon List</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="submit.html">Submit</a>
+<a href="admin.html">Admin</a>
+<a href="https://discord.gg/XXXX" target="_blank">Discord</a>
 </div>
 
+<a href="index.html">← Back</a>
+
+<div id="content"></div>
+
 <script>
-let levels = JSON.parse(localStorage.getItem("levels")) || [];
-let records = JSON.parse(localStorage.getItem("records")) || [];
+let levels = JSON.parse(localStorage.getItem("levels"))||[];
+let records = JSON.parse(localStorage.getItem("records"))||[];
 let id = localStorage.getItem("selectedLevel");
 
 let level = levels.find(l=>l.id==id);
+let passed = records.filter(r=>r.levelId==id && r.approved);
 
-document.getElementById("content").innerHTML = `
-  <div class="card">
-    <h2>${level.name}</h2>
-  </div>
+let first = passed[0]?.nick || "None";
+
+document.getElementById("content").innerHTML=`
+<div class="card">
+<h2>${level.name}</h2>
+<p><b>First Victor:</b> ${first}</p>
+</div>
+
+<h3>Completed Records</h3>
+${passed.map(r=>`
+<div class="card">
+${r.nick} (${r.progress}%)
+<br>
+<a href="${r.yt}" target="_blank">Watch Video</a>
+</div>`).join("")}
 `;
-
-function submit(){
-  records.push({
-    levelId:id,
-    player:player.value,
-    progress:progress.value
-  });
-  localStorage.setItem("records",JSON.stringify(records));
-  alert("Record gönderildi");
-}
 </script>
 
 </body>
