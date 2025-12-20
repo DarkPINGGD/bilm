@@ -46,6 +46,24 @@ a{text-decoration:none}
 <div id="list"></div>
 
 <script>
+<h1>Demon List</h1>
+<div id="list"></div>
+
+<script>
+const levels = JSON.parse(localStorage.getItem("levels")) || [];
+const list = document.getElementById("list");
+
+if(levels.length===0){
+  list.innerHTML="<p>No levels yet.</p>";
+}else{
+  list.innerHTML = levels.map(l=>`
+    <div style="margin:10px 0;font-size:20px">
+      <b>#${l.rank}</b> ${l.name}
+      <br>
+      <small>Creator: ${l.creator}</small>
+    </div>
+  `).join("");
+}
 let levels = JSON.parse(localStorage.getItem("levels")) || [
  {id:1,name:"Bloodbath"},
  {id:2,name:"Sonic Wave"}
