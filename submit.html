@@ -2,38 +2,59 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Submit Record</title>
+<title>Submit</title>
 <style>
 body{background:#e6f2ff;font-family:Arial}
 input,button{display:block;margin:6px;padding:6px}
+small{color:#444}
+.menu{position:fixed;top:10px;right:10px}
+.menu a{margin-left:10px;color:#0077ff;font-weight:bold}
 </style>
 </head>
 <body>
 
-<h1>Submit Record</h1>
-<a href="index.html">← Back</a>
+<div class="menu">
+<a href="index.html">Demon List</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="submit.html">Submit</a>
+<a href="admin.html">Admin</a>
+<a href="https://discord.gg/XXXX" target="_blank">Discord</a>
+</div>
 
-<input id="raw" placeholder="Raw Footage Link">
-<input id="nick" placeholder="Player Nick">
-<input id="level" placeholder="Level Name">
-<input id="progress" type="number" placeholder="Progress %">
-<input id="yt" placeholder="YouTube Link">
+<h1>Submit Record</h1>
+
+<small>Raw Footage (ham video, kesilmemiş)</small>
+<input id="raw">
+
+<small>Player Nick</small>
+<input id="nick">
+
+<small>Level Name</small>
+<input id="level">
+
+<small>Progress (%)</small>
+<input id="progress" type="number">
+
+<small>YouTube Video Link</small>
+<input id="yt">
 
 <button onclick="send()">Submit</button>
 
 <script>
 function send(){
-  let records = JSON.parse(localStorage.getItem("records")) || [];
-  records.push({
-    raw:raw.value,
-    nick:nick.value,
-    level:level.value,
-    progress:progress.value,
-    yt:yt.value,
-    approved:false
-  });
-  localStorage.setItem("records",JSON.stringify(records));
-  alert("Record gönderildi, admin onayı bekleniyor");
+ let records=JSON.parse(localStorage.getItem("records"))||[];
+ records.push({
+  raw:raw.value,
+  nick:nick.value,
+  levelName:level.value,
+  progress:progress.value,
+  yt:yt.value,
+  approved:false,
+  levelId: JSON.parse(localStorage.getItem("levels"))
+    .find(l=>l.name==level.value)?.id
+ });
+ localStorage.setItem("records",JSON.stringify(records));
+ alert("Submitted");
 }
 </script>
 
