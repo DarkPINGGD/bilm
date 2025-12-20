@@ -27,6 +27,10 @@ document.getElementById("loginBtn").addEventListener("click", login);
 function login(){
   const passValue = document.getElementById("pass").value;
   const panel = document.getElementById("panel");
+  <h2>Existing Levels</h2>
+<div id="levelList"></div>
+  renderLevels();
+
 
   if(passValue !== PASSWORD){
     alert("Wrong password");
@@ -151,6 +155,45 @@ function addLevel(){
   localStorage.setItem("levels", JSON.stringify(levels));
 
   alert("LEVEL ADDED SUCCESSFULLY");
+  function renderLevels(){
+  const listDiv = document.getElementById("levelList");
+  if(!listDiv) return;
+
+  let levels = JSON.parse(localStorage.getItem("levels")) || [];
+  listDiv.innerHTML = "";
+
+  if(levels.length === 0){
+    listDiv.innerHTML = "<p>No levels.</p>";
+    return;
+  }
+
+  levels
+    .sort((a,b)=>a.rank-b.rank)
+    .forEach((l,i)=>{
+      listDiv.innerHTML += `
+        <div style="margin:6px 0">
+          <b>#${l.rank}</b> ${l.name}
+          <button style="margin-left:10px" onclick="deleteLevel(${i})">
+            Delete
+          </button>
+        </div>
+      `;
+    });
+    function deleteLevel(index){
+  if(!confirm("Delete this level?")) return;
+
+  let levels = JSON.parse(localStorage.getItem("levels")) || [];
+  const removed = levels.splice(index,1)[0];
+
+  localStorage.setItem("levels", JSON.stringify(levels));
+
+  // Bu levelin recordlarını da sil
+  let records = JSON.parse(localStorage.getItem("records")) || [];
+  records = records.filter(r => r.levelId !== removed.id);
+  localStorage.setItem("records", JSON.stringify(records));
+
+  alert("Level deleted");
+  location.reload();
 }
 </script>
 
