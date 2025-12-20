@@ -1,54 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Test</title>
+</head>
+
+<body>
+
+<h1>Admin Panel Test</h1>
+
+<input id="pass" placeholder="password">
+<button onclick="login()">Login</button>
+
+<div id="panel"></div>
+
 <script>
 const PASSWORD = "1234";
 
-const pass = document.getElementById("pass");
-const panel = document.getElementById("panel");
-
-let records = JSON.parse(localStorage.getItem("records")) || [];
-let levels  = JSON.parse(localStorage.getItem("levels")) || [];
-
 function login(){
-  if(pass.value !== PASSWORD){
-    alert("Wrong password");
+  const pass = document.getElementById("pass").value;
+  const panel = document.getElementById("panel");
+
+  if(pass !== PASSWORD){
+    alert("Wrong");
     return;
   }
 
   panel.innerHTML = `
-    <h2>Pending Records</h2>
-    ${
-      records.map((r,i)=>`
-        <div class="card">
-          <b>${r.nick}</b> — ${r.levelName} (${r.progress}%)
-          <br>
-          <a href="${r.yt}" target="_blank">YouTube</a> |
-          <a href="${r.raw}" target="_blank">Raw</a>
-          <br><br>
-          ${r.approved ? "APPROVED" : `
-            <button class="approve" onclick="approve(${i})">Approve</button>
-            <button class="reject" onclick="reject(${i})">Reject</button>
-          `}
-        </div>
-      `).join("")
-    }
+    <h2>LOGIN OK</h2>
 
-    <h2>Add Level</h2>
-    <input id="levelId" placeholder="Level ID">
-    <input id="levelName" placeholder="Level Name">
-    <input id="levelCreator" placeholder="Creator">
-    <button class="add" onclick="addLevel()">Add Level</button>
+    <input id="levelId" placeholder="Level ID"><br>
+    <input id="levelName" placeholder="Level Name"><br>
+    <input id="levelCreator" placeholder="Creator"><br>
+    <button onclick="addLevel()">Add Level</button>
   `;
-}
-
-function approve(i){
-  records[i].approved = true;
-  localStorage.setItem("records", JSON.stringify(records));
-  location.reload();
-}
-
-function reject(i){
-  records.splice(i,1);
-  localStorage.setItem("records", JSON.stringify(records));
-  location.reload();
 }
 
 function addLevel(){
@@ -56,13 +41,14 @@ function addLevel(){
   const name = document.getElementById("levelName").value;
   const creator = document.getElementById("levelCreator").value;
 
-  if(!id || !name || !creator){
-    alert("All fields required");
-    return;
-  }
+  let levels = JSON.parse(localStorage.getItem("levels")) || [];
 
-  levels.push({ id, name, creator });
+  levels.push({id,name,creator});
   localStorage.setItem("levels", JSON.stringify(levels));
-  alert("Level added!");
+
+  alert("LEVEL ADDED");
 }
 </script>
+
+</body>
+</html>
