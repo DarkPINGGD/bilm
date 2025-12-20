@@ -77,13 +77,40 @@ function reject(i){
 }
 
 function addLevel(){
+  const rank = document.getElementById("levelRank").value;
   const id = document.getElementById("levelId").value;
   const name = document.getElementById("levelName").value;
   const creator = document.getElementById("levelCreator").value;
 
-  if(!id || !name || !creator){
+  if(!rank || !id || !name || !creator){
     alert("All fields required");
     return;
+  }
+
+  let levels = JSON.parse(localStorage.getItem("levels")) || [];
+
+  levels.push({
+    rank: Number(rank),
+    id: id,
+    name: name,
+    creator: creator,
+    records: []
+  });
+
+  // sıraya göre diz
+  levels.sort((a,b)=>a.rank-b.rank);
+
+  localStorage.setItem("levels", JSON.stringify(levels));
+
+  alert("LEVEL ADDED SUCCESSFULLY");
+
+  // inputları temizle
+  document.getElementById("levelRank").value="";
+  document.getElementById("levelId").value="";
+  document.getElementById("levelName").value="";
+  document.getElementById("levelCreator").value="";
+}
+
   }
 
   levels.push({ id, name, creator });
