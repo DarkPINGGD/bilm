@@ -4,9 +4,16 @@
 <meta charset="UTF-8">
 <title>Leaderboard</title>
 <style>
-body{background:#e6f2ff;font-family:Arial;margin:0;padding:0;}
-h1{text-align:center;font-size:36px;margin-top:50px;color:#0077ff;font-weight:800;}
-.card{background:#cce6ff;padding:10px;margin:10px auto;border-radius:8px;max-width:600px;}
+body{font-family:Arial;background:#e6f2ff;margin:0;padding:20px;}
+h1{text-align:center;color:#0077ff;font-size:36px;margin-bottom:30px;}
+.card{background:#cce6ff;padding:16px;margin:12px auto;border-radius:8px;max-width:600px;}
+.rank{font-weight:bold;font-size:18px;color:#1e40af;}
+.points{color:#1e90ff;font-weight:bold;}
+.completed{margin-top:6px;color:#064e3b;}
+.first-victories{margin-top:4px;color:#f59e0b;}
+.menu{display:flex;justify-content:center;gap:16px;margin-bottom:20px;}
+.menu a{text-decoration:none;font-weight:bold;color:#1e90ff;}
+.menu a:hover{color:#005eff;text-shadow:0 0 8px rgba(0,123,255,0.7);}
 body{background:#e6f2ff;font-family:Arial}
 .card{background:#cce6ff;padding:10px;margin:10px}
 .menu{position:fixed;top:10px;right:10px}
@@ -35,24 +42,41 @@ a{cursor:pointer}
 </head>
 <body>
 
+<div class="menu">
+  <a href="index.html">Demon List</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="submit.html">Submit</a>
+  <a href="admin.html">Admin</a>
+  <a href="https://discord.gg/XXXX" target="_blank">Discord</a>
+</div>
+
 <h1>Leaderboard</h1>
+
 <div id="leaderboard"></div>
 
 <script>
 let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 
-// Puanlara göre sıralama (yüksekten düşüğe)
-leaderboard.sort((a,b)=>b.points - a.points);
+if(leaderboard.length === 0){
+    document.getElementById("leaderboard").innerHTML = "<p style='text-align:center;'>No players yet.</p>";
+} else {
+    // Puana göre azalan sıralama
+    leaderboard.sort((a,b)=>b.points - a.points);
 
-const lbDiv = document.getElementById("leaderboard");
-lbDiv.innerHTML = leaderboard.map((p,i)=>`
-  <div class="card">
-    <b>Rank #${i+1} — ${p.nick}</b><br>
-    Points: ${p.points}<br>
-    Completed: ${p.completed.length>0 ? p.completed.join(", ") : "None"}<br>
-    First Victories: ${p.firstVictories.length>0 ? p.firstVictories.join(", ") : "None"}
-  </div>
-`).join("");
+    const container = document.getElementById("leaderboard");
+    container.innerHTML = "";
+
+    leaderboard.forEach((player,index)=>{
+        container.innerHTML += `
+            <div class="card">
+                <div class="rank">${index+1}. ${player.nick}</div>
+                <div class="points">Points: ${player.points}</div>
+                <div class="completed"><b>Completed:</b> ${player.completed.length > 0 ? player.completed.join(", ") : "None"}</div>
+                <div class="first-victories"><b>First Victories:</b> ${player.firstVictories.length > 0 ? player.firstVictories.join(", ") : "None"}</div>
+            </div>
+        `;
+    });
+}
 </script>
 
 </body>
