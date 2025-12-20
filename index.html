@@ -46,77 +46,54 @@ a{text-decoration:none}
 <div id="list"></div>
 
 <script>
+/* LEVELS + RECORDS OKU */
 const levels = JSON.parse(localStorage.getItem("levels")) || [];
+const records = JSON.parse(localStorage.getItem("records")) || [];
 
 const list = document.getElementById("list");
 
 if(levels.length === 0){
   list.innerHTML = "<p>No levels yet.</p>";
 } else {
+
   levels
     .sort((a,b)=>a.rank - b.rank)
-    .forEach(l=>{
+    .forEach(l => {
+
+      // Bu level için onaylanmış recordlar
+      const levelRecords = records.filter(r =>
+        r.levelId === l.id && r.approved
+      );
+
+      // İlk girilen record = First Victor
+      const firstRecord = levelRecords.length > 0
+        ? levelRecords[0]
+        : null;
+
       list.innerHTML += `
-        <div style="padding:10px;border-bottom:1px solid #ccc">
-          <b>#${l.rank}</b>
-          <span style="font-size:20px;margin-left:10px">${l.name}</span>
-          <br>
-          <small>Creator: ${l.creator}</small>
+        <div class="card">
+          <div style="font-size:22px;font-weight:bold">
+            #${l.rank} ${l.name}
+          </div>
+
+          <p><b>Creator:</b> ${l.creator}</p>
+
+          <p>
+            <b>First Record:</b>
+            ${
+              firstRecord
+              ? `<a href="${firstRecord.yt}" target="_blank">
+                   ${firstRecord.nick}
+                 </a>`
+              : "None"
+            }
+          </p>
         </div>
       `;
     });
 }
-const levels = JSON.parse(localStorage.getItem("levels")) || [];
-const list = document.getElementById("list");
-
-if(levels.length===0){
-  list.innerHTML="<p>No levels yet.</p>";
-}else{
-  list.innerHTML = levels.map(l=>`
-    <div style="margin:10px 0;font-size:20px">
-      <b>#${l.rank}</b> ${l.name}
-      <br>
-      <small>Creator: ${l.creator}</small>
-    </div>
-  `).join("");
-}
-let levels = JSON.parse(localStorage.getItem("levels")) || [
- {id:1,name:"Bloodbath"},
- {id:2,name:"Sonic Wave"}
-];
-
-localStorage.setItem("levels",JSON.stringify(levels));
-
-document.getElementById("list").innerHTML =
-levels.map(l => {
-
-  let levelRecords = records.filter(r =>
-    r.levelId === l.id && r.approved
-  );
-
-  let firstRecord = levelRecords.find(r => r.isFirst);
-
-  return `
-  <div class="card">
-    <div class="level-name">
-      #${l.rank} ${l.name}
-    </div>
-
-    <p><b>Creator:</b> ${l.creator}</p>
-
-    <p>
-      <b>First Record:</b>
-      ${
-        firstRecord
-        ? `<a href="${firstRecord.yt}" target="_blank">${firstRecord.nick}</a>`
-        : "None"
-      }
-    </p>
-  </div>
-  `;
-});
-
 </script>
+
 
 </body>
 </html>
