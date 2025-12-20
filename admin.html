@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <title>Admin Panel</title>
@@ -10,7 +10,9 @@
 <h1>Admin Panel</h1>
 
 <input id="pass" type="password" placeholder="Admin Password">
-<button onclick="login()">Login</button>
+<button id="loginBtn">Login</button>
+
+<hr>
 
 <div id="panel"></div>
 
@@ -19,6 +21,8 @@ const PASSWORD = "1234";
 
 let records = JSON.parse(localStorage.getItem("records")) || [];
 let levels  = JSON.parse(localStorage.getItem("levels")) || [];
+
+document.getElementById("loginBtn").addEventListener("click", login);
 
 function login(){
   const passValue = document.getElementById("pass").value;
@@ -29,13 +33,13 @@ function login(){
     return;
   }
 
-  panel.innerHTML = `
-    <h2>Pending Records</h2>
+  let html = "<h2>Pending Records</h2>";
 
-    ${
-      records.length === 0
-      ? "<p>No records yet.</p>"
-      : records.map((r,i)=>`
+  if(records.length === 0){
+    html += "<p>No records yet.</p>";
+  } else {
+    records.forEach((r,i)=>{
+      html += `
         <div style="border:1px solid #aaa; padding:10px; margin:10px 0">
           <b>${r.nick}</b> — ${r.levelId} (${r.progress}%)
           <br>
@@ -47,19 +51,22 @@ function login(){
             <button onclick="reject(${i})">Reject</button>
           `}
         </div>
-      `).join("")
-    }
+      `;
+    });
+  }
 
+  html += `
     <hr>
-<h2>Add Level</h2>
+    <h2>Add Level</h2>
 
-<input id="levelRank" placeholder="Rank (example: 23)">
-<input id="levelId" placeholder="Level ID">
-<input id="levelName" placeholder="Level Name">
-<input id="levelCreator" placeholder="Creator">
-<button onclick="addLevel()">Add Level</button>
-
+    <input id="levelRank" placeholder="Rank (example: 23)"><br>
+    <input id="levelId" placeholder="Level ID"><br>
+    <input id="levelName" placeholder="Level Name"><br>
+    <input id="levelCreator" placeholder="Creator"><br><br>
+    <button onclick="addLevel()">Add Level</button>
   `;
+
+  panel.innerHTML = html;
 }
 
 function approve(i){
@@ -87,28 +94,17 @@ function addLevel(){
     return;
   }
 
-  let levels = JSON.parse(localStorage.getItem("levels")) || [];
-
   levels.push({
     rank: Number(rank),
-    id: id,
-    name: name,
-    creator: creator,
-    records: []
+    id,
+    name,
+    creator
   });
 
-  // sıraya göre diz
   levels.sort((a,b)=>a.rank-b.rank);
-
   localStorage.setItem("levels", JSON.stringify(levels));
 
   alert("LEVEL ADDED SUCCESSFULLY");
-
-  // inputları temizle
-  document.getElementById("levelRank").value="";
-  document.getElementById("levelId").value="";
-  document.getElementById("levelName").value="";
-  document.getElementById("levelCreator").value="";
 }
 </script>
 
