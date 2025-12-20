@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Submit Record</title>
+<style>
+body{background:#e6f2ff;font-family:Arial}
+input,button{display:block;margin:6px;padding:6px}
+</style>
+</head>
+<body>
+
+<h1>Submit Record</h1>
+<a href="index.html">← Back</a>
+
+<input id="raw" placeholder="Raw Footage Link">
+<input id="nick" placeholder="Player Nick">
+<input id="level" placeholder="Level Name">
+<input id="progress" type="number" placeholder="Progress %">
+<input id="yt" placeholder="YouTube Link">
+
+<button onclick="send()">Submit</button>
+
+<script>
+function send(){
+  let records = JSON.parse(localStorage.getItem("records")) || [];
+  records.push({
+    raw:raw.value,
+    nick:nick.value,
+    level:level.value,
+    progress:progress.value,
+    yt:yt.value,
+    approved:false
+  });
+  localStorage.setItem("records",JSON.stringify(records));
+  alert("Record gönderildi, admin onayı bekleniyor");
+}
+</script>
+
+</body>
+</html>
