@@ -54,17 +54,34 @@ let levels = JSON.parse(localStorage.getItem("levels")) || [
 localStorage.setItem("levels",JSON.stringify(levels));
 
 document.getElementById("list").innerHTML =
-levels.map((l,i)=>`
-  <div class="card">
-    <a href="level.html" onclick="select(${l.id})">
-      #${i+1} ${l.name}
-    </a>
-  </div>
-`).join("");
+levels.map(l => {
 
-function select(id){
-  localStorage.setItem("selectedLevel",id);
-}
+  let levelRecords = records.filter(r =>
+    r.levelId === l.id && r.approved
+  );
+
+  let firstRecord = levelRecords.find(r => r.isFirst);
+
+  return `
+  <div class="card">
+    <div class="level-name">
+      #${l.rank} ${l.name}
+    </div>
+
+    <p><b>Creator:</b> ${l.creator}</p>
+
+    <p>
+      <b>First Record:</b>
+      ${
+        firstRecord
+        ? `<a href="${firstRecord.yt}" target="_blank">${firstRecord.nick}</a>`
+        : "None"
+      }
+    </p>
+  </div>
+  `;
+});
+
 </script>
 
 </body>
