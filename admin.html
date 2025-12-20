@@ -95,7 +95,7 @@ function login(){
 function approve(i){
   const record = records[i];
 
-  // Level'ı ID ile bul (her zaman string karşılaştır)
+  // Level'ı ID ile bul
   const level = levels.find(l => l.id.toString() === record.levelId.toString());
   if(!level) return alert("Level not found");
 
@@ -109,7 +109,7 @@ function approve(i){
   // Puan ekle
   player.points += Number(level.points) || 0;
 
-  // Completed ekle
+  // Completed ekle (sadece eklenmemişse)
   if(!player.completed.includes(level.name)) player.completed.push(level.name);
 
   // First Victor kontrolü
@@ -122,7 +122,7 @@ function approve(i){
   // Record'u onayla
   record.approved = true;
 
-  // localStorage güncelle
+  // LocalStorage güncelle
   localStorage.setItem("records", JSON.stringify(records));
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 
