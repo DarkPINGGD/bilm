@@ -92,21 +92,21 @@ function approve(i){
     player = {
       nick: record.nick,
       points: 0,
-      completed: [],       // burası boşsa problem olabilir
+      completed: [],
       firstVictories: []
     };
     leaderboard.push(player);
   }
 
   // Puan ekle
-  player.points += level.points || 0;
+  player.points += Number(level.points) || 0;
 
-  // Completed ekle
+  // Completed ekle (tekrar eklenmesin)
   if(!player.completed.includes(level.name)){
-    player.completed.push(level.name);  // level adı ekleniyor
+    player.completed.push(level.name);
   }
 
-  // First Victor kontrol
+  // First Victor kontrolü
   const approvedRecords = records.filter(r =>
     r.levelId.toString() === level.id.toString() && r.approved
   );
@@ -125,6 +125,8 @@ function approve(i){
 
   alert("Record approved + points added");
   location.reload();
+}
+
 }
 
 }
