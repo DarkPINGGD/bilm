@@ -116,8 +116,6 @@ function approve(i){
   location.reload();
 }
 
-}
-
 function reject(i){ records.splice(i,1); localStorage.setItem("records",JSON.stringify(records)); alert("Record rejected"); location.reload(); }
 
 function addLevel(){
