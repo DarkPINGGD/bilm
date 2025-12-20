@@ -199,9 +199,6 @@ function approve(i) {
   const level = levels.find(l => l.id.toString() === record.levelId.toString());
   if(!level) return alert("Level not found");
 
-  // Eğer level.name undefined ise uyarı ver
-  if(!level.name) return alert("Level name not found for this ID");
-
   // Player'ı bul veya oluştur
   let player = leaderboard.find(p => p.nick === record.nick);
   if(!player) {
@@ -212,20 +209,18 @@ function approve(i) {
   // Puan ekle
   player.points += Number(level.points) || 0;
 
-  // Completed kısmına ekle (tekrar eklenmesin diye kontrol)
-  if(!player.completed.includes(level.name)) {
-    player.completed.push(level.name);
-  }
-
-  // First Victor kontrolü
-  const approvedRecordsForLevel = records.filter(r => r.levelId.toString() === level.id.toString() && r.approved);
-  if(approvedRecordsForLevel.length === 0) {
-    player.firstVictories.push(level.name);
-    record.isFirst = true;
-  }
+  // Completed kısmına ekle (tekrar eklenmesin)
+  if(!player.completed.includes(level.name)) player.completed.push(level.name);
 
   // Record'u onayla
   record.approved = true;
+
+  // First Victor kontrolü
+  const approvedRecordsForLevel = records.filter(r => r.levelId.toString() === level.id.toString() && r.approved);
+  if(approvedRecordsForLevel.length === 1) { // sadece bu record onaylıysa first victor
+    player.firstVictories.push(level.name);
+    record.isFirst = true;
+  }
 
   // LocalStorage güncelle
   localStorage.setItem("records", JSON.stringify(records));
