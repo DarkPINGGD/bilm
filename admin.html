@@ -116,7 +116,9 @@ function login(){
  `).join("") + `
 
  <h2>Add Level</h2>
- <input id="lname" placeholder="Level Name">
+ <input id="levelId" placeholder="Level ID">
+<input id="levelName" placeholder="Level Name">
+<input id="levelCreator" placeholder="Creator">
  <button class="add" onclick="addLevel()">Add Level</button>
  `;
 }
@@ -136,10 +138,24 @@ function reject(i){
 }
 
 function addLevel(){
- let levels=JSON.parse(localStorage.getItem("levels"))||[];
- levels.push({id:Date.now(),name:lname.value});
- localStorage.setItem("levels",JSON.stringify(levels));
- alert("Level added");
+  const id = document.getElementById("levelId").value;
+  const name = document.getElementById("levelName").value;
+  const creator = document.getElementById("levelCreator").value;
+
+  if(!id || !name || !creator){
+    alert("All fields required");
+    return;
+  }
+
+  levels.push({
+    id: id,
+    name: name,
+    creator: creator
+  });
+
+  saveLevels();
+}
+
 }
 </script>
 
