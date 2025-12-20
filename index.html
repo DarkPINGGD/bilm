@@ -46,10 +46,26 @@ a{text-decoration:none}
 <div id="list"></div>
 
 <script>
-<h1>Demon List</h1>
-<div id="list"></div>
+const levels = JSON.parse(localStorage.getItem("levels")) || [];
 
-<script>
+const list = document.getElementById("list");
+
+if(levels.length === 0){
+  list.innerHTML = "<p>No levels yet.</p>";
+} else {
+  levels
+    .sort((a,b)=>a.rank - b.rank)
+    .forEach(l=>{
+      list.innerHTML += `
+        <div style="padding:10px;border-bottom:1px solid #ccc">
+          <b>#${l.rank}</b>
+          <span style="font-size:20px;margin-left:10px">${l.name}</span>
+          <br>
+          <small>Creator: ${l.creator}</small>
+        </div>
+      `;
+    });
+}
 const levels = JSON.parse(localStorage.getItem("levels")) || [];
 const list = document.getElementById("list");
 
