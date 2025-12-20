@@ -2,18 +2,83 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin</title>
+<title>Admin Panel</title>
+
 <style>
-body{background:#e6f2ff;font-family:Arial}
-.card{background:#cce6ff;margin:8px;padding:8px}
+body{
+  background:#e6f2ff;
+  font-family:Arial;
+  font-size:18px;
+}
+
+h1{font-size:40px}
+
+.menu{
+  position:fixed;
+  top:10px;
+  right:20px;
+}
+.menu a{
+  margin-left:16px;
+  font-size:18px;
+  color:#1e90ff;
+  font-weight:800;
+}
+
+.divider{
+  position:fixed;
+  top:50px;
+  left:0;
+  width:100%;
+  height:1px;
+  background:rgba(0,0,0,0.2);
+}
+
+.card{
+  background:#cce6ff;
+  padding:16px;
+  margin:14px 0;
+  border-radius:8px;
+  font-size:20px;
+}
+
+button{
+  padding:8px 14px;
+  font-size:18px;
+  font-weight:700;
+  border:0;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.approve{background:#22c55e;color:white}
+.reject{background:#ef4444;color:white}
+.add{background:#2563eb;color:white}
+
+input{
+  padding:8px;
+  font-size:18px;
+  margin:6px 0;
+  width:100%;
+}
 </style>
 </head>
+
 <body>
+
+<div class="menu">
+<a href="index.html">Demon List</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="submit.html">Submit</a>
+<a href="admin.html">Admin</a>
+<a href="https://discord.gg/XXXX" target="_blank">Discord</a>
+</div>
+<div class="divider"></div>
 
 <h1>Admin Panel</h1>
 
 <input id="pass" type="password" placeholder="Admin Password">
-<button onclick="login()">Login</button>
+<button onclick="login()" class="add">Login</button>
 
 <div id="panel"></div>
 
@@ -21,30 +86,54 @@ body{background:#e6f2ff;font-family:Arial}
 const PASSWORD="1234";
 
 function login(){
-  if(pass.value!==PASSWORD) return alert("Wrong password");
+ if(pass.value!==PASSWORD) return alert("Wrong password");
 
-  let records = JSON.parse(localStorage.getItem("records")) || [];
-  panel.innerHTML = records.map((r,i)=>`
-    <div class="card">
-      ${r.nick} | ${r.level} | ${r.progress}%
-      <br>
-      <a href="${r.yt}" target="_blank">YT</a> |
-      <a href="${r.raw}" target="_blank">Raw</a>
-      <br>
-      ${r.approved ? "APPROVED" :
-        `<button onclick="approve(${i})">Approve</button>`}
-    </div>
-  `).join("");
+ let records = JSON.parse(localStorage.getItem("records"))||[];
+ let levels = JSON.parse(localStorage.getItem("levels"))||[];
+
+ panel.innerHTML = `
+ <h2>Pending Records</h2>
+ ` + records.map((r,i)=>`
+ <div class="card">
+ <b>${r.nick}</b> — ${r.levelName} (${r.progress}%)
+ <br>
+ <a href="${r.yt}" target="_blank">YouTube</a> |
+ <a href="${r.raw}" target="_blank">Raw</a>
+ <br><br>
+ ${r.approved ? "APPROVED" : `
+ <button class="approve" onclick="approve(${i})">Approve</button>
+ <button class="reject" onclick="reject(${i})">Reject</button>
+ `}
+ </div>
+ `).join("") + `
+
+ <h2>Add Level</h2>
+ <input id="lname" placeholder="Level Name">
+ <button class="add" onclick="addLevel()">Add Level</button>
+ `;
 }
 
 function approve(i){
-  let records = JSON.parse(localStorage.getItem("records"));
-  records[i].approved=true;
-  localStorage.setItem("records",JSON.stringify(records));
-  location.reload();
+ let r=JSON.parse(localStorage.getItem("records"));
+ r[i].approved=true;
+ localStorage.setItem("records",JSON.stringify(r));
+ location.reload();
+}
+
+function reject(i){
+ let r=JSON.parse(localStorage.getItem("records"));
+ r.splice(i,1);
+ localStorage.setItem("records",JSON.stringify(r));
+ location.reload();
+}
+
+function addLevel(){
+ let levels=JSON.parse(localStorage.getItem("levels"))||[];
+ levels.push({id:Date.now(),name:lname.value});
+ localStorage.setItem("levels",JSON.stringify(levels));
+ alert("Level added");
 }
 </script>
 
 </body>
 </html>
-
