@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Level</title>
+<style>
+body{background:#0b0f1a;color:white;font-family:Arial}
+.card{background:#11162a;padding:12px;margin:10px;border-radius:6px}
+button{background:#2563eb;color:white;border:0;padding:6px}
+</style>
+</head>
+<body>
+
+<a href="index.html">← Back</a>
+<div id="content"></div>
+
+<div class="card">
+<h3>Submit Record</h3>
+<input id="player" placeholder="Player">
+<input id="progress" type="number" placeholder="Progress %">
+<button onclick="submit()">Send</button>
+</div>
+
+<script>
+let levels = JSON.parse(localStorage.getItem("levels")) || [];
+let records = JSON.parse(localStorage.getItem("records")) || [];
+let id = localStorage.getItem("selectedLevel");
+
+let level = levels.find(l=>l.id==id);
+
+document.getElementById("content").innerHTML = `
+  <div class="card">
+    <h2>${level.name}</h2>
+  </div>
+`;
+
+function submit(){
+  records.push({
+    levelId:id,
+    player:player.value,
+    progress:progress.value
+  });
+  localStorage.setItem("records",JSON.stringify(records));
+  alert("Record gönderildi");
+}
+</script>
+
+</body>
+</html>
