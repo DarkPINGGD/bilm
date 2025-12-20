@@ -2,91 +2,39 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Pointercrate Clone</title>
+<title>Demon List</title>
 <style>
-body{background:#0b0f1a;color:#fff;font-family:Arial;margin:0}
-header{background:#11162a;padding:15px;text-align:center}
-.card{background:#11162a;margin:10px;padding:12px;border-radius:6px}
-button{background:#2563eb;color:white;border:0;padding:6px 10px;cursor:pointer}
-input,select{background:black;color:white;border:1px solid #333;padding:6px;margin:4px}
+body{background:#0b0f1a;color:white;font-family:Arial}
+.card{background:#11162a;padding:12px;margin:10px;border-radius:6px}
+a{color:#60a5fa;text-decoration:none}
 </style>
 </head>
 <body>
 
-<header>
-<h2>Pointercrate Demon List</h2>
-</header>
+<h1>Demon List</h1>
 
-<div class="card">
-<h3>Login</h3>
-<input id="u" placeholder="username">
-<input id="p" type="password" placeholder="password">
-<button onclick="login()">Login</button>
-<p>admin / admin123 | user / user123</p>
-</div>
-
-<div class="card">
-<h3>Levels</h3>
-<div id="levels"></div>
-</div>
-
-<div class="card" id="submit" style="display:none">
-<h3>Submit Record</h3>
-<input id="player" placeholder="Player">
-<input id="progress" type="number" placeholder="Progress %">
-<button onclick="submitRecord()">Submit</button>
-</div>
-
-<div class="card" id="records" style="display:none">
-<h3>Records (Admin)</h3>
-<div id="recordList"></div>
-</div>
+<div id="list"></div>
 
 <script>
-let user=null;
-let levels=["Bloodbath","Sonic Wave","Tartarus"];
-let records=JSON.parse(localStorage.getItem("records")||"[]");
+let levels = JSON.parse(localStorage.getItem("levels")) || [
+  {id:1,rank:1,name:"Bloodbath"},
+  {id:2,rank:2,name:"Sonic Wave"}
+];
 
-function login(){
-  if(u.value==="admin"&&p.value==="admin123") user="admin";
-  if(u.value==="user"&&p.value==="user123") user="user";
-  alert("Giriş yapıldı: "+user);
-  render();
+localStorage.setItem("levels",JSON.stringify(levels));
+
+document.getElementById("list").innerHTML =
+levels.map(l=>`
+  <div class="card">
+    #${l.rank} ${l.name}
+    <br>
+    <a href="level.html" onclick="select(${l.id})">View</a>
+  </div>
+`).join("");
+
+function select(id){
+  localStorage.setItem("selectedLevel",id);
 }
-
-function render(){
-  levelsDiv="";
-  levels.forEach(l=>{
-    levelsDiv+=`<div onclick="selectLevel('${l}')">${l}</div>`;
-  });
-  levels.innerHTML=levelsDiv;
-
-  if(user==="admin"){
-    recordsDiv="";
-    records.forEach(r=>{
-      recordsDiv+=`<div>${r.player} - ${r.level} (${r.progress}%)</div>`;
-    });
-    recordList.innerHTML=recordsDiv;
-    records.style.display="block";
-  }
-}
-
-let selected="";
-function selectLevel(l){
-  selected=l;
-  if(user==="user") submit.style.display="block";
-}
-
-function submitRecord(){
-  records.push({
-    player:player.value,
-    level:selected,
-    progress:progress.value
-  });
-  localStorage.setItem("records",JSON.stringify(records));
-  alert("Record gönderildi");
-}
-render();
 </script>
 
 </body>
