@@ -72,9 +72,50 @@ function login(){
 
 function approve(i){
   records[i].approved = true;
+
+  // Level bul
+  const level = levels.find(l => l.id === records[i].levelId);
+  if(!level) return alert("Level not found");
+
+  // Leaderboard oku
+  let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+  // Oyuncu var mı?
+  let player = leaderboard.find(p => p.nick === records[i].nick);
+
+  if(!player){
+    player = {
+      nick: records[i].nick,
+      points: 0,
+      completed: [],
+      firstVictories: []
+    };
+    leaderboard.push(player);
+  }
+
+  // Puan ekle
+  player.points += level.points;
+
+  // Completed ekle
+  player.completed.push(level.name);
+
+  // First Victor kontrol
+  const approvedRecords = records.filter(r =>
+    r.levelId === level.id && r.approved
+  );
+
+  if(approvedRecords.length === 1){
+    player.firstVictories.push(level.name);
+    records[i].isFirst = true;
+  }
+
+  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   localStorage.setItem("records", JSON.stringify(records));
-  alert("Record approved");
+
+  alert("Record approved + points added");
   location.reload();
+}
+
 }
 
 function reject(i){
