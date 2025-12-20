@@ -78,6 +78,20 @@ function login(){
   panel.innerHTML=html;
   renderLevels();
 }
+
+
+  html+=`<hr><h2>Add Level</h2>
+    <input id="levelRank" placeholder="Rank (example: 23)"><br>
+    <input id="levelId" placeholder="Level ID"><br>
+    <input id="levelName" placeholder="Level Name"><br>
+    <input id="levelCreator" placeholder="Creator"><br>
+    <input id="levelPoints" placeholder="Points for completing"><br>
+    <button class="add" onclick="addLevel()">Add Level</button>
+    <div id="levelList"></div>
+  `;
+  panel.innerHTML=html;
+  renderLevels();
+}
 function approve(i){
   const record = records[i];
 
