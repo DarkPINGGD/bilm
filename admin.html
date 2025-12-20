@@ -78,30 +78,44 @@ function login(){
   panel.innerHTML=html;
   renderLevels();
 }
-
 function approve(i){
-  const record=records[i];
+  const record = records[i];
+
+  // Level'ı ID ile bul (her zaman string karşılaştır)
   const level = levels.find(l => l.id.toString() === record.levelId.toString());
-if(!level) return alert("Level not found");
+  if(!level) return alert("Level not found");
 
-// completed ekleme
-if(!player.completed.includes(level.name)) player.completed.push(level.name);
+  // Player'ı bul veya oluştur
+  let player = leaderboard.find(p => p.nick === record.nick);
+  if(!player){
+    player = { nick: record.nick, points: 0, completed: [], firstVictories: [] };
+    leaderboard.push(player);
+  }
 
+  // Puan ekle
+  player.points += Number(level.points) || 0;
 
-  let player=leaderboard.find(p=>p.nick===record.nick);
-  if(!player){ player={nick:record.nick,points:0,completed:[],firstVictories:[]}; leaderboard.push(player); }
-
-  player.points+=Number(level.points)||0;
+  // Completed ekle
   if(!player.completed.includes(level.name)) player.completed.push(level.name);
 
-  const approvedRecords = records.filter(r=>r.levelId.toString()===level.id.toString() && r.approved);
-  if(approvedRecords.length===0){ player.firstVictories.push(level.name); record.isFirst=true; }
+  // First Victor kontrolü
+  const approvedRecordsForLevel = records.filter(r => r.levelId.toString() === level.id.toString() && r.approved);
+  if(approvedRecordsForLevel.length === 0){
+    player.firstVictories.push(level.name);
+    record.isFirst = true;
+  }
 
-  record.approved=true;
-  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+  // Record'u onayla
+  record.approved = true;
+
+  // localStorage güncelle
   localStorage.setItem("records", JSON.stringify(records));
+  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
   alert("Record approved + points added");
   location.reload();
+}
+
 }
 
 function reject(i){ records.splice(i,1); localStorage.setItem("records",JSON.stringify(records)); alert("Record rejected"); location.reload(); }
