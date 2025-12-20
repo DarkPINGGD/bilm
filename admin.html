@@ -130,7 +130,7 @@ function login() {
       html += `<div class="card">
         <b>${r.nick}</b> — ${r.levelId} (${r.progress}%)
         <br><a href="${r.yt}" target="_blank">YouTube</a> | <a href="${r.raw}" target="_blank">Raw</a>
-        <br>${r.approved ? "APPROVED" : `<button class="approve" onclick="approve(${i})">Approve</button> <button class="reject" onclick="reject(${i})">Reject</button>`}
+        <br>${r.approved ? "APPROVED": `<button class="approve" onclick="approve(${i})">Approve</button> <button class="reject" onclick="reject(${i})">Reject</button>`}
       </div>`;
     });
   }
@@ -194,35 +194,37 @@ function deleteLevel(i) {
 
 function approve(i) {
   const record = records[i];
-  
+
   // Level'ı ID ile bul
   const level = levels.find(l => l.id.toString() === record.levelId.toString());
   if(!level) return alert("Level not found");
 
   // Player'ı bul veya oluştur
   let player = leaderboard.find(p => p.nick === record.nick);
-  if(!player) {
-    player = { nick: record.nick, points: 0, completed: [], firstVictories: [] };
+  if(!player){
+    player = {nick: record.nick, points: 0, completed: [], firstVictories: []};
     leaderboard.push(player);
   }
 
   // Puan ekle
   player.points += Number(level.points) || 0;
 
-  // Completed kısmına ekle (tekrar eklenmesin)
-  if(!player.completed.includes(level.name)) player.completed.push(level.name);
-
-  // Record'u onayla
-  record.approved = true;
+  // Completed kısmına ekle
+  if(!player.completed.includes(level.name)){
+    player.completed.push(level.name);
+  }
 
   // First Victor kontrolü
   const approvedRecordsForLevel = records.filter(r => r.levelId.toString() === level.id.toString() && r.approved);
-  if(approvedRecordsForLevel.length === 1) { // sadece bu record onaylıysa first victor
+  if(approvedRecordsForLevel.length === 0){
     player.firstVictories.push(level.name);
     record.isFirst = true;
   }
 
-  // LocalStorage güncelle
+  // Record'u onayla
+  record.approved = true;
+
+  // Güncelle localStorage
   localStorage.setItem("records", JSON.stringify(records));
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 
