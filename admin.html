@@ -20,7 +20,22 @@ const PASSWORD = "1234";
 function login(){
   const pass = document.getElementById("pass").value;
   const panel = document.getElementById("panel");
-
+  <h2>Pending Records</h2>
+${
+  records.map((r,i)=>`
+    <div>
+      ${r.nick} — ${r.levelId} (${r.progress}%)
+      <br>
+      <a href="${r.yt}" target="_blank">YT</a>
+      <a href="${r.raw}" target="_blank">RAW</a>
+      <br>
+      ${r.approved ? "APPROVED" : `
+        <button onclick="approve(${i})">Approve</button>
+        <button onclick="reject(${i})">Reject</button>
+      `}
+    </div>
+  `).join("")
+}
   if(pass !== PASSWORD){
     alert("Wrong");
     return;
