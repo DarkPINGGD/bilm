@@ -2,14 +2,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin Test</title>
+<title>Admin Panel</title>
 </head>
 
 <body>
 
-<h1>Admin Panel Test</h1>
+<h1>Admin Panel</h1>
 
-<input id="pass" placeholder="password">
+<input id="pass" type="password" placeholder="Admin Password">
 <button onclick="login()">Login</button>
 
 <div id="panel"></div>
@@ -17,33 +17,42 @@
 <script>
 const PASSWORD = "1234";
 
+let records = JSON.parse(localStorage.getItem("records")) || [];
+let levels  = JSON.parse(localStorage.getItem("levels")) || [];
+
 function login(){
-  const pass = document.getElementById("pass").value;
+  const passValue = document.getElementById("pass").value;
   const panel = document.getElementById("panel");
-  <h2>Pending Records</h2>
-${
-  records.map((r,i)=>`
-    <div>
-      ${r.nick} — ${r.levelId} (${r.progress}%)
-      <br>
-      <a href="${r.yt}" target="_blank">YT</a>
-      <a href="${r.raw}" target="_blank">RAW</a>
-      <br>
-      ${r.approved ? "APPROVED" : `
-        <button onclick="approve(${i})">Approve</button>
-        <button onclick="reject(${i})">Reject</button>
-      `}
-    </div>
-  `).join("")
-}
-  if(pass !== PASSWORD){
-    alert("Wrong");
+
+  if(passValue !== PASSWORD){
+    alert("Wrong password");
     return;
   }
 
   panel.innerHTML = `
-    <h2>LOGIN OK</h2>
+    <h2>Pending Records</h2>
 
+    ${
+      records.length === 0
+      ? "<p>No records yet.</p>"
+      : records.map((r,i)=>`
+        <div style="border:1px solid #aaa; padding:10px; margin:10px 0">
+          <b>${r.nick}</b> — ${r.levelId} (${r.progress}%)
+          <br>
+          <a href="${r.yt}" target="_blank">YouTube</a> |
+          <a href="${r.raw}" target="_blank">Raw</a>
+          <br><br>
+          ${r.approved ? "APPROVED" : `
+            <button onclick="approve(${i})">Approve</button>
+            <button onclick="reject(${i})">Reject</button>
+          `}
+        </div>
+      `).join("")
+    }
+
+    <hr>
+
+    <h2>Add Level</h2>
     <input id="levelId" placeholder="Level ID"><br>
     <input id="levelName" placeholder="Level Name"><br>
     <input id="levelCreator" placeholder="Creator"><br>
@@ -51,17 +60,34 @@ ${
   `;
 }
 
+function approve(i){
+  records[i].approved = true;
+  localStorage.setItem("records", JSON.stringify(records));
+  alert("Record approved");
+  location.reload();
+}
+
+function reject(i){
+  records.splice(i,1);
+  localStorage.setItem("records", JSON.stringify(records));
+  alert("Record rejected");
+  location.reload();
+}
+
 function addLevel(){
   const id = document.getElementById("levelId").value;
   const name = document.getElementById("levelName").value;
   const creator = document.getElementById("levelCreator").value;
 
-  let levels = JSON.parse(localStorage.getItem("levels")) || [];
+  if(!id || !name || !creator){
+    alert("All fields required");
+    return;
+  }
 
-  levels.push({id,name,creator});
+  levels.push({ id, name, creator });
   localStorage.setItem("levels", JSON.stringify(levels));
 
-  alert("LEVEL ADDED");
+  alert("Level added!");
 }
 </script>
 
