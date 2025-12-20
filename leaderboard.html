@@ -4,39 +4,58 @@
 <meta charset="UTF-8">
 <title>Leaderboard</title>
 <style>
-body{font-family:Arial;background:#e6f2ff;margin:0;padding:20px;}
-h1{text-align:center;color:#0077ff;font-size:36px;margin-bottom:30px;}
-.card{background:#cce6ff;padding:20px;margin:12px auto;border-radius:12px;max-width:600px;text-align:center;}
-.rank{font-weight:bold;font-size:32px;color:#1e40af;margin-bottom:8px;}
-.points{color:#1e90ff;font-weight:bold;font-size:24px;margin-bottom:8px;}
-.completed{margin-top:10px;color:#064e3b;font-size:20px;}
-.first-victories{margin-top:6px;color:#f59e0b;font-size:20px;}
-.menu{display:flex;justify-content:center;gap:16px;margin-bottom:20px;}
-.menu a{text-decoration:none;font-weight:bold;color:#1e90ff;font-size:18px;}
-.menu a:hover{color:#005eff;text-shadow:0 0 8px rgba(0,123,255,0.7);},
-body{background:#e6f2ff;font-family:Arial}
-.card{background:#cce6ff;padding:10px;margin:10px}
-.menu{position:fixed;top:10px;right:10px}
-.menu a{margin-left:10px;color:#0077ff;font-weight:bold}
-a{cursor:pointer}
- .menu{
-  position:fixed;
-  top:10px;
-  right:20px;
+body{
+    font-family:Arial;
+    background:#e6f2ff;
+    margin:0;
+    padding:20px;
+    text-align:center; /* tüm sayfa ortalanır */
 }
-
+h1{
+    color:#0077ff;
+    font-size:36px;
+    margin-bottom:30px;
+}
+.card{
+    background:#cce6ff;
+    padding:20px;
+    margin:12px auto;
+    border-radius:12px;
+    max-width:500px;
+    text-align:center; /* card içindeki her şeyi ortalar */
+}
+.rank{
+    font-weight:bold;
+    font-size:36px; /* büyük */
+    color:#1e40af;
+    margin-bottom:8px;
+}
+.points{
+    color:#1e90ff;
+    font-weight:bold;
+    font-size:28px;
+    margin-bottom:8px;
+}
+.completed, .first-victories{
+    margin-top:10px;
+    color:#064e3b;
+    font-size:22px;
+}
+.menu{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:20px;
+}
 .menu a{
-  margin-left:16px;
-  font-size:18px;
-  color:#1e90ff;
-  font-weight:800;
-  letter-spacing:1.2px;
-  text-transform:uppercase;
+    text-decoration:none;
+    font-weight:bold;
+    color:#1e90ff;
+    font-size:18px;
 }
-
 .menu a:hover{
-  color:#005eff;
-  text-shadow:0 0 8px rgba(0,123,255,0.7);
+    color:#005eff;
+    text-shadow:0 0 8px rgba(0,123,255,0.7);
 }
 </style>
 </head>
@@ -58,7 +77,7 @@ a{cursor:pointer}
 let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 
 if(leaderboard.length === 0){
-    document.getElementById("leaderboard").innerHTML = "<p style='text-align:center;font-size:22px;'>No players yet.</p>";
+    document.getElementById("leaderboard").innerHTML = "<p style='font-size:22px;'>No players yet.</p>";
 } else {
     // Puana göre azalan sıralama
     leaderboard.sort((a,b)=>b.points - a.points);
