@@ -5,29 +5,44 @@
 <title>Leaderboard</title>
 <style>
 body{background:#e6f2ff;font-family:Arial}
-.card{background:#cce6ff;margin:8px;padding:8px}
+.card{background:#cce6ff;padding:10px;margin:10px}
+.menu{position:fixed;top:10px;right:10px}
+.menu a{margin-left:10px;color:#0077ff;font-weight:bold}
+a{cursor:pointer}
 </style>
 </head>
 <body>
 
-<h1>Player Leaderboard</h1>
-<a href="index.html">← Back</a>
+<div class="menu">
+<a href="index.html">Demon List</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="submit.html">Submit</a>
+<a href="admin.html">Admin</a>
+<a href="https://discord.gg/XXXX" target="_blank">Discord</a>
+</div>
 
+<h1>Leaderboard</h1>
 <div id="lb"></div>
 
 <script>
-let records = JSON.parse(localStorage.getItem("records")) || [];
-let approved = records.filter(r=>r.approved);
+let records=JSON.parse(localStorage.getItem("records"))||[];
+let approved=records.filter(r=>r.approved);
 
-let scores = {};
+let data={};
 approved.forEach(r=>{
-  scores[r.nick]=(scores[r.nick]||0)+1;
+ if(!data[r.nick]) data[r.nick]={points:0,levels:[]};
+ data[r.nick].points+=500;
+ data[r.nick].levels.push(r.levelName);
 });
 
-document.getElementById("lb").innerHTML =
-Object.keys(scores).map(p=>
-  `<div class="card">${p} - ${scores[p]} record</div>`
-).join("");
+document.getElementById("lb").innerHTML=
+Object.keys(data).map(n=>`
+<div class="card">
+<b>${n}</b> - ${data[n].points} pts
+<br>
+Completed: ${data[n].levels.join(", ")}
+</div>
+`).join("");
 </script>
 
 </body>
