@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test List Info</title>
+<style>
+body {
+  margin:0;
+  padding:0;
+  font-family: Arial, sans-serif;
+  background:#e6f2ff;
+}
+
+/* Sol üst bilgi kesin görünür */
+.list-info {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1e90ff;
+  background: rgba(255,255,255,0.9);
+  padding: 8px 14px;
+  border-radius: 6px;
+  z-index: 99999; /* tüm elementlerin üstünde */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Menü sağ üst */
+.menu-container {
+  position: fixed;
+  top:10px;
+  right:20px;
+  z-index: 10000;
+}
+.menu a {
+  font-size:18px;
+  color:#1e90ff;
+  font-weight:bold;
+  margin-left:16px;
+  text-decoration:none;
+}
+.menu a:hover { color:#005eff; }
+
+/* İçerik test */
+#content {
+  margin-top: 100px;
+  padding:20px;
+}
+</style>
+</head>
+<body>
+
+<!-- Sol üst info -->
+<div class="list-info">Extended – Main – Legacy List</div>
+
+<!-- Menü sağ üst -->
+<div class="menu-container">
+  <div class="menu">
+    <a href="#">Demon List</a>
+    <a href="#">Leaderboard</a>
+    <a href="#">Submit</a>
+    <a href="#">Admin</a>
+  </div>
+</div>
+
+<!-- İçerik -->
+<div id="content">
+  <h1>Sayfa İçeriği</h1>
+  <p>Burada demon listesi, card’lar ve diğer içerikler olacak.</p>
+</div>
+
+</body>
+</html>
