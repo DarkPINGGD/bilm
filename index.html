@@ -1,17 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Geometry Dash Finland List</title>
 <style>
+/* Global CSS */
 body {
-  margin:0;
-  padding:0;
-  font-family: Arial, sans-serif;
-  background:#e6f2ff;
+  margin: 0;
+  background: #0b0f1a;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
 }
-
-/* Sol üst bilgi */
+button {
+  cursor: pointer;
+}
+input, select {
+  background: black;
+  color: white;
+  border: 1px solid #333;
+  padding: 6px;
+}
+.card {
+  background: #11162a;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 15px auto;
+  max-width: 800px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
 .list-info {
   position: fixed;
   top: 10px;
@@ -22,70 +38,54 @@ body {
   background: rgba(255,255,255,0.9);
   padding: 6px 12px;
   border-radius: 6px;
-  z-index: 99999; /* diğer tüm elementlerin üstünde */
+  z-index: 99999;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
 /* Başlık */
 .header {
-  text-align:center;
-  margin-top:60px; /* sol üst info ile çakışmasın */
+  text-align: center;
+  margin-top: 60px;
 }
 .header h1 {
-  font-size:48px;
-  font-weight:bold;
-  color:#1e90ff;
-  text-shadow:2px 2px 8px rgba(0,0,0,0.3);
+  font-size: 48px;
+  font-weight: bold;
+  color: #1e90ff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 }
 
 /* Menü sağ üst */
 .menu-container {
-  position:fixed;
-  top:10px;
-  right:20px;
+  position: fixed;
+  top: 10px;
+  right: 20px;
   z-index: 10000;
 }
 .menu {
-  display:flex;
-  gap:16px;
+  display: flex;
+  gap: 16px;
 }
 .menu a {
-  font-size:18px;
-  color:#1e90ff;
-  font-weight:800;
-  letter-spacing:1.2px;
-  text-transform:uppercase;
-  text-decoration:none;
-  position:relative;
-  padding:0 10px;
+  font-size: 18px;
+  color: #1e90ff;
+  font-weight: bold;
+  text-decoration: none;
+  position: relative;
+  padding: 0 10px;
 }
 .menu a:not(:last-child)::after {
   content:"";
-  position:absolute;
+  position: absolute;
   right:0;
   top:0;
   height:100%;
   width:1px;
-  background: rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.2);
 }
 .menu a:hover {
-  color:#005eff;
+  color:#00bfff;
   text-shadow:0 0 8px rgba(0,123,255,0.7);
 }
-
-/* Level Card */
-.card {
-  background:#cce6ff;
-  padding:15px;
-  margin:15px auto;
-  border-radius:6px;
-  box-shadow:0 4px 6px rgba(0,0,0,0.1);
-  max-width:800px;
-}
-.card .level-title {
-  font-size:22px;
-  font-weight:bold;
-}
-.card p { margin:4px 0; }
 
 #list { max-width: 1200px; margin: 20px auto; }
 
@@ -93,14 +93,8 @@ body {
 </head>
 <body>
 
-  <div class="list-info">
-  Extended – Main – Legacy List – v1.0
-</div>
-
 <!-- Sol üst bilgi -->
-<div class="list-info">
-  Extended – Main – Legacy List
-</div>
+<div class="list-info">Extended – Main – Legacy List – v1.0</div>
 
 <!-- Başlık -->
 <div class="header">
@@ -110,20 +104,19 @@ body {
 <!-- Menü sağ üst -->
 <div class="menu-container">
   <div class="menu">
-    <a href="index.html">Demon List</a>
-    <a href="leaderboard.html">Leaderboard</a>
-    <a href="submit.html">Submit</a>
-    <a href="admin.html">Admin</a>
+    <a href="#">Demon List</a>
+    <a href="#">Leaderboard</a>
+    <a href="#">Submit</a>
+    <a href="#">Admin</a>
     <a href="https://discord.gg/XXXX" target="_blank">Discord</a>
   </div>
-  <div style="height:2px; background:rgba(0,0,0,0.2); margin-top:6px;"></div>
 </div>
 
-<h1 style="text-align:center; margin-top:0;">Demon List</h1>
-
+<!-- Level listesi -->
 <div id="list"></div>
 
 <script>
+// Örnek level ve record verisi
 const levels = [
   {id:1, rank:1, name:"Acheron", creator:"Ryamu"},
   {id:2, rank:2, name:"Slaughterhouse", creator:"Icedcave"},
@@ -145,7 +138,9 @@ levels.sort((a,b)=>a.rank-b.rank).forEach(l=>{
     <div class="card">
       <div class="level-title">#${l.rank} ${l.name}</div>
       <p><b>Creator:</b> ${l.creator}</p>
-      <p><b>First Record:</b> ${firstRecord ? `<a href="${firstRecord.yt}" target="_blank">${firstRecord.nick}</a>` : "None"}</p>
+      <p><b>First Record:</b> ${
+        firstRecord ? `<a href="${firstRecord.yt}" target="_blank">${firstRecord.nick}</a>` : "None"
+      }</p>
     </div>
   `;
 });
