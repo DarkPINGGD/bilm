@@ -20,14 +20,15 @@ input, select {
   margin-bottom: 10px;
 }
 .list-info {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #1e90ff;
-  background: rgba(255,255,255,0.9);
-  padding: 6px 12px;
-  border-radius: 6px;
-  z-index: 99999;
+  position: fixed !important;
+  top: 10px !important;
+  left: 10px !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: #1e90ff !important;
+  background: rgba(255,255,255,0.95) !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  z-index: 2147483647 !important; /* kesinlikle en üstte */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
 }
