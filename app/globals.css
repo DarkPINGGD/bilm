@@ -19,3 +19,15 @@ input, select {
   border-radius: 6px;
   margin-bottom: 10px;
 }
+.list-info {
+  position: fixed;       /* Her zaman görünür */
+  top: 10px;             /* Sayfanın üstünden 10px */
+  left: 10px;            /* Sayfanın solundan 10px */
+  font-size: 18px;       /* Yazı boyutu */
+  font-weight: bold;     /* Kalın yazı */
+  color: #0a213d;        /* İstediğin renk */
+  background: rgba(255,255,255,0.7); /* Hafif şeffaf arka plan */
+  padding: 6px 12px;     /* Yazının çevresine boşluk */
+  border-radius: 6px;    /* Köşeleri yuvarlat */
+  z-index: 9999;         /* Üstte görünmesini sağlar */
+}
