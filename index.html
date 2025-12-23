@@ -5,10 +5,10 @@
 <title>Geometry Dash Finland List</title>
 <style>
 body {
-  background: #e6f2ff;
-  font-family: Arial, sans-serif;
   margin:0;
   padding:0;
+  font-family: Arial, sans-serif;
+  background:#e6f2ff;
 }
 
 /* Sol üst bilgi */
@@ -19,22 +19,22 @@ body {
   font-size: 18px;
   font-weight: bold;
   color: #1e90ff;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.9);
   padding: 6px 12px;
   border-radius: 6px;
-  z-index: 9999;
+  z-index: 99999; /* diğer tüm elementlerin üstünde */
 }
 
-/* Başlık ortada */
+/* Başlık */
 .header {
   text-align:center;
-  margin-top:60px; /* Sol üst info ile çakışmasın */
+  margin-top:60px; /* sol üst info ile çakışmasın */
 }
 .header h1 {
   font-size:48px;
   font-weight:bold;
   color:#1e90ff;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  text-shadow:2px 2px 8px rgba(0,0,0,0.3);
 }
 
 /* Menü sağ üst */
@@ -42,7 +42,7 @@ body {
   position:fixed;
   top:10px;
   right:20px;
-  z-index:9999;
+  z-index: 10000;
 }
 .menu {
   display:flex;
@@ -72,40 +72,36 @@ body {
   text-shadow:0 0 8px rgba(0,123,255,0.7);
 }
 
-/* Level card */
+/* Level Card */
 .card {
   background:#cce6ff;
   padding:15px;
-  margin:15px;
+  margin:15px auto;
   border-radius:6px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow:0 4px 6px rgba(0,0,0,0.1);
+  max-width:800px;
 }
 .card .level-title {
   font-size:22px;
   font-weight:bold;
 }
-.card p {
-  margin:4px 0;
-}
+.card p { margin:4px 0; }
 
-/* Responsive container */
-#list {
-  max-width: 1200px;
-  margin: 20px auto;
-}
+#list { max-width: 1200px; margin: 20px auto; }
 
 </style>
 </head>
 <body>
-  <!-- Sol üst liste bilgisi -->
-  <div class="list-info">
-    Extended – Main – Legacy List
-  </div>
 
-  <!-- Menü ve Başlık -->
-  <div class="header">
-    <h1>Geometry Dash Finland List</h1>
-  </div>
+<!-- Sol üst bilgi -->
+<div class="list-info">
+  Extended – Main – Legacy List
+</div>
+
+<!-- Başlık -->
+<div class="header">
+  <h1>Geometry Dash Finland List</h1>
+</div>
 
 <!-- Menü sağ üst -->
 <div class="menu-container">
@@ -124,39 +120,31 @@ body {
 <div id="list"></div>
 
 <script>
-/* LEVELS + RECORDS OKU */
-const levels = JSON.parse(localStorage.getItem("levels")) || [
+const levels = [
   {id:1, rank:1, name:"Acheron", creator:"Ryamu"},
   {id:2, rank:2, name:"Slaughterhouse", creator:"Icedcave"},
   {id:76, rank:76, name:"Artificial Ascent", creator:"ViPriN"}
 ];
-const records = JSON.parse(localStorage.getItem("records")) || [
+
+const records = [
   {levelId:1, nick:"Zoink", yt:"https://youtu.be/xxx", approved:true},
   {levelId:2, nick:"Zoink", yt:"https://youtu.be/yyy", approved:true}
 ];
 
 const list = document.getElementById("list");
 
-if(levels.length === 0){
-  list.innerHTML = "<p>No levels yet.</p>";
-} else {
-  levels
-    .sort((a,b)=>a.rank - b.rank)
-    .forEach(l => {
-      const levelRecords = records.filter(r => r.levelId === l.id && r.approved);
-      const firstRecord = levelRecords.length > 0 ? levelRecords[0] : null;
+levels.sort((a,b)=>a.rank-b.rank).forEach(l=>{
+  const levelRecords = records.filter(r=>r.levelId===l.id && r.approved);
+  const firstRecord = levelRecords.length>0 ? levelRecords[0] : null;
 
-      list.innerHTML += `
-        <div class="card">
-          <div class="level-title">#${l.rank} ${l.name}</div>
-          <p><b>Creator:</b> ${l.creator}</p>
-          <p><b>First Record:</b> ${
-            firstRecord ? `<a href="${firstRecord.yt}" target="_blank">${firstRecord.nick}</a>` : "None"
-          }</p>
-        </div>
-      `;
-    });
-}
+  list.innerHTML += `
+    <div class="card">
+      <div class="level-title">#${l.rank} ${l.name}</div>
+      <p><b>Creator:</b> ${l.creator}</p>
+      <p><b>First Record:</b> ${firstRecord ? `<a href="${firstRecord.yt}" target="_blank">${firstRecord.nick}</a>` : "None"}</p>
+    </div>
+  `;
+});
 </script>
 
 </body>
